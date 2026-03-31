@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Българска Популярна Музика - Презентация</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6e45e2; /* Лилаво */
+            --secondary: #88d3ce; /* Тюркоаз */
+            --text: #ffffff;
+            --glass: rgba(255, 255, 255, 0.08);
+            --bg-dark: #0a0e17;
+            --gradient-1: linear-gradient(135deg, #6e45e2 0%, #88d3ce 100%);
+            --gradient-2: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+            --gradient-3: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+            --gradient-4: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Montserrat', sans-serif; }
+
+        body {
+            background-color: var(--bg-dark);
+            background-image: 
+                radial-gradient(at 10% 10%, rgba(110, 69, 226, 0.3) 0px, transparent 50%),
+                radial-gradient(at 90% 90%, rgba(136, 211, 206, 0.3) 0px, transparent 50%);
+            color: var(--text);
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .presentation-container {
+            position: relative;
+            width: 90vw;
+            height: 85vh;
+            max-width: 1100px;
+            perspective: 1500px;
+        }
+
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            padding: 50px;
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 30px;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.6);
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.8s;
+            opacity: 0;
+            transform: rotateY(15deg) translateX(100px);
+        }
+
+        .slide.active {
+            display: flex;
+            opacity: 1;
+            transform: rotateY(0deg) translateX(0);
+        }
+
+        /* Мега яка рамка за картинката */
+        .image-container {
+            width: 100%;
+            max-width: 600px;
+            height: 350px;
+            border-radius: 20px;
+            margin-bottom: 25px;
+            position: relative;
+            padding: 5px; /* Пространство за неона */
+            background: var(--gradient-1); /* Неонов ефект */
+            box-shadow: 0 0 30px rgba(110, 69, 226, 0.5);
+            transition: 0.5s;
+        }
+        
+        .image-container:hover {
+            transform: scale(1.03);
+            box-shadow: 0 0 50px rgba(136, 211, 206, 0.7);
+        }
+
+        /* Вътрешната част (градиент вместо снимка) */
+        .slide-placeholder {
+            width: 100%;
+            height: 100%;
+            border-radius: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 5rem;
+            color: rgba(255,255,255,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .slide-placeholder::after {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(0deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0) 100%);
+            animation: shine 3s infinite;
+            transform: rotate(45deg);
+        }
+
+        @keyframes shine {
+            0% { top: -200%; left: -200%; }
+            100% { top: 100%; left: 100%; }
+        }
+
+        /* Заглавия и текст */
+        h1 { font-size: 3.5rem; margin-bottom: 25px; background: var(--gradient-1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; letter-spacing: 3px; font-weight: 700; }
+        h2 { font-size: 2.5rem; margin-bottom: 20px; color: var(--secondary); font-weight: 400;}
+        p { font-size: 1.2rem; line-height: 1.7; max-width: 850px; color: #e0e0e0; font-weight: 300;}
+
+        /* Обяснението под картинката */
+        .caption-box {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px 20px;
+            border-radius: 10px;
+            margin-top: -10px;
+            margin-bottom: 20px;
+            border-left: 3px solid var(--secondary);
+        }
+        .caption { font-style: italic; font-size: 1rem; color: #b0b0b0; }
+
+        /* Навигация */
+        .controls {
+            position: absolute;
+            bottom: -70px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 25px;
+            z-index: 10;
+        }
+
+        button {
+            padding: 15px 35px;
+            border: none;
+            border-radius: 50px;
+            background: var(--gradient-1);
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: 0.4s;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+
+        button:hover:not(:disabled) {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(110, 69, 226, 0.5);
+        }
+
+        button:disabled {
+            background: #333;
+            color: #777;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .slide-number {
+            position: absolute;
+            top: 25px;
+            right: 35px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: var(--secondary);
+            background: rgba(255,255,255,0.1);
+            padding: 5px 15px;
+            border-radius: 20px;
+        }
+
+        ul { list-style: none; text-align: left; width: 100%; max-width: 600px;}
+        li { margin: 15px 0; font-size: 1.3rem; font-weight: 300; display: flex; align-items: center;}
+        li::before { content: "⚡"; margin-right: 15px; color: var(--secondary); font-size: 1.5rem; }
+
+    </style>
+</head>
+<body>
+
+    <div class="presentation-container">
+        <div class="slide active">
+            <div class="slide-number">1 / 10</div>
+            <h1>Българска Популярна Музика</h1>
+            <div class="image-container">
+                <div class="slide-placeholder" style="background: var(--gradient-1);">🎤</div>
+            </div>
+            <div class="caption-box">
+                <p class="caption">Илюстрация: Стилизиран микрофон върху енергичен лилав градиент, символизиращ началото на музикалното шоу.</p>
+            </div>
+            <p>Пътешествие през ритмите, емоциите и историята на родната музикална култура.</p>
+        </div>
+
+        <div class="slide">
+            <div class="slide-number">2 / 10</div>
+            <h2>Съдържание</h2>
+            <div class="image-container">
+                <div class="slide-placeholder" style="background: var(--gradient-2);">📋</div>
+            </div>
+            <div class="caption-box">
+                <p class="caption">Илюстрация: Икона за списък върху мек розов градиент, представяща структурата на презентацията.</p>
+            </div>
+            <ul>
+                <li>Начало и Златни години (60-те и 70-те)</li>
+                <li>Ерата на „Балкантон“ и „Златният Орфей“</li>
+                <li>Българският рок и ню уейв бунт</li>
+                <li>Съвременна поп, хип-хоп и етно сцена</li>
+            </ul>
+        </div>
+
+        <div class="slide">
+            <div class="slide-number">3 / 10</div>
+            <h2>Златните гласове</h2>
+            <div class="image-container">
+                <div class="slide-placeholder" style="background: var(--gradient-3);">🌟</div>
+            </div>
+            <div class="caption-box">
+                <p class="caption">Илюстрация: Блестяща звезда върху небесносин градиент, символ на вечните звезди на естрадата.</p>
+            </div>
+            <p>Периодът на Лили Иванова, Емил Димитров и Васил Найденов. Епоха на поетични текстове и големи оркестри.</p>
+        </div>
+
+        <div class="slide">
+            <div class="slide-number">4 / 10</div>
+            <h2>„Златният Орфей“</h2>
+            <div class="image-container">
+                <div class="slide-placeholder" style="background: var(--gradient-4);">🏆</div>
+            </div>
+            <div class="caption-box">
+                <p class="caption">Илюстрация: Трофей върху огнен градиент, напомнящ за престижа на легендарния фестивал.</p>
+            </div>
+            <p>Най-значимият форум, който направи българската песен известна по света и роди десетки хитове.</p>
+        </div>
+
+        <div class="slide">
+            <div class="slide-number">5 / 10</div>
+            <h2>Рок бунтът</h2>
+            <div class="image-container">
+                <div class="slide-placeholder" style="background: var(--gradient-1);">🎸</div>
+            </div>
+            <div class="caption-box">
+                <p class="caption">Илюстрация: Електрическа китара върху рокенрол градиент, символ на свободата през 80-те.</p>
+            </div>
+            <p>Групите Щурците, ФСБ, Сигнал и Ахат промениха звученето и донесоха нова, бунтарска енергия.</p>
+        </div>
+
+        <div class="slide">
+            <div class="slide-number">6 / 10</div>
+            <h2>Годините на прехода</h2>
+            <div class="image-container">
+                <div class="slide-placeholder" style="background: var(--gradient-2);">📻</div>
+            </div>
+            <div class="caption-box">
+                <p class="caption">Илюстрация: Ретро радио върху касетъчен градиент, представящо шарената музикална картина на 90-те.</p>
+            </div>
+            <p>Появата на частни медии, нови жанрове и първите стъпки на модерната поп и денс музика.</p>
+        </div>
+
+        <div class="slide">
+            <div class="slide-number">7 / 10</div>
+            <h2>Модерният звук</h2>
+            <div class="image-container">
+                <div class="slide-placeholder" style="background: var(--gradient-3);">🎧</div>
+            </div>
+            <div class="caption-box">
+                <p class="caption">Илюстрация: Модерни слушалки върху дигитален син градиент, символ на стрийминг ерата.</p>
+            </div>
+            <p>Днешната сцена се владее от силен хип-хоп, качествен поп и артисти, които сами продуцират музиката си.</p>
+        </div>
+
+        <div class="slide">
+            <div class="slide-number">8 / 10</div>
+            <h2>Традиция и бъдеще</h2>
+            <div class="image-container">
+                <div class="slide-placeholder" style="background: var(--gradient-4);">🧩</div>
+            </div>
+            <div class="caption-box">
+                <p class="caption">Илюстрация: Пъзел върху магичен градиент, показващ как фолклорът се вписва в модерния бийт.</p>
+            </div>
+            <p>Уникалното съчетание на автентични български народни мотиви със съвременни електронни аранжименти.</p>
+        </div>
+
+        <div class="slide">
+            <div class="slide-number">9 / 10</div>
+            <h2>Индустрията днес</h2>
+            <div class="image-container">
+                <div class="slide-placeholder" style="background: var(--gradient-1);">🎹</div>
+            </div>
+            <div class="caption-box">
+                <p class="caption">Илюстрация: Синтезатор върху професионален лилав градиент, представящ високото ниво на продукция.</p>
+            </div>
+            <p>Технологиите позволяват на българските артисти да създават световно качество и да достигат глобална публика.</p>
+        </div>
+
+        <div class="slide">
+            <div class="slide-number">10 / 10</div>
+            <h1>Благодаря за вниманието!</h1>
+            <div class="image-container">
+                <div class="slide-placeholder" style="background: var(--gradient-3);">🎉</div>
+            </div>
+            <div class="caption-box">
+                <p class="caption">Илюстрация: Парти елемент върху празничен градиент, отпразнуващ края на нашето пътешествие.</p>
+            </div>
+            <p>Българската музика е жива, развиваща се и винаги вълнуваща. Нека я подкрепяме!</p>
+        </div>
+
+        <div class="controls">
+            <button id="prevBtn" onclick="changeSlide(-1)" disabled>Назад</button>
+            <button id="nextBtn" onclick="changeSlide(1)">Напред</button>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+
+        function changeSlide(direction) {
+            slides[currentSlide].classList.remove('active');
+            
+            currentSlide += direction;
+
+            // Осигуряваме, че индексът е в границите
+            if (currentSlide >= slides.length) currentSlide = slides.length - 1;
+            if (currentSlide < 0) currentSlide = 0;
+
+            // Малка пауза, за да завърши скриването на стария слайд (опционално, за по-гладко)
+            setTimeout(() => {
+                slides[currentSlide].classList.add('active');
+            }, 50);
+
+            // Обновяване състоянието на бутоните
+            prevBtn.disabled = (currentSlide === 0);
+            nextBtn.disabled = (currentSlide === slides.length - 1);
+        }
+
+        // Поддръжка на клавиатура (стрелки)
+        document.addEventListener('keydown', (e) => {
+            if (e.key === "ArrowRight" || e.key === " ") { // Стрелка надясно или Интервал
+                e.preventDefault(); // Предотвратява скролването при Интервал
+                if (currentSlide < slides.length - 1) changeSlide(1);
+            }
+            if (e.key === "ArrowLeft") { // Стрелка наляво
+                if (currentSlide > 0) changeSlide(-1);
+            }
+        });
+    </script>
+</body>
+</html>
